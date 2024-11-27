@@ -1,0 +1,4 @@
+name: codec2 
+build:
+  cmake-ext: True
+  kconfig-ext: True
