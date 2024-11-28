@@ -1,4 +1,4 @@
 name: codec2 
 build:
   cmake: .
-  kconfig-ext: zephyr/Kconfig 
+  kconfig: zephyr/Kconfig 
