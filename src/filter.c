@@ -24,6 +24,7 @@
 
 #include "debug_alloc.h"
 #include "filter_coef.h"
+#include "defines.h"
 
 #define cmplx(value) (cosf(value) + sinf(value) * I)
 
