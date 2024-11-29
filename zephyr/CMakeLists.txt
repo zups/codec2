@@ -21,7 +21,7 @@ zephyr_get_compile_options_for_lang_as_string(           C options)
 set(external_project_cflags
       "${target_flag} ${includes} ${definitions} ${options} ${system_includes}"
         )
-#include(cmake/gencodebooks.cmake)
+    #include(../stm32/cmake/gencodebooks.cmake)
 
 #
 # Prevent in-source builds
@@ -143,7 +143,7 @@ message(STATUS "CMAKE_ASM_FLAGS: " ${CMAKE_ASM_FLAGS})
 #endmacro()
 
 #include(CTest)
-include_directories(../src inc ${PROJECT_BINARY_DIR})
+include_directories(../stm32/src ../stm32/inc ../src inc ${PROJECT_BINARY_DIR})
 
 #add_subdirectory(unittest/src)
 
@@ -159,6 +159,7 @@ configure_file ("${PROJECT_SOURCE_DIR}/../cmake/version.h.in"
 #set(CODEC2_GEN_CODEBOOK_SRC ../build/src)
 #set(CODEC2_SRCS
 set(CODEC2_SRC ../src)
+set(CODEC2_STM32 ../stm32)
 set(CODEC2_GEN_CODEBOOK_SRC ../build/src)
 set(CODEC2_SRCS
 ${CODEC2_SRC}/lpc.c
@@ -206,10 +207,23 @@ ${CODEC2_SRC}/codec2_math_arm.c
 #codebookge.c
 #codebooknewamp1_energy.c
 #codebooknewamp1.c
+#src/tone.c
+#src/sfx.c
+#src/sounds.c
+#src/morse.c
+#src/menu.c
+#src/tot.c
+#src/sm1000_leds_switches.c
+#../src/codec2_fifo.c
+#src/debugblinky.c
+#src/stm32f4_vrom.c
+#src/stm32f4_usart.c
+${CODEC2_STM32}/src/memtools.c
 )
 
 zephyr_library()
 
+zephyr_library_include_directories(${CODEC2_SRC})
 zephyr_library_sources(${CODEC2_SRCS})
 #add_library(codec2_prof STATIC ${CODEC2_SRCS})
 #target_compile_definitions(codec2_prof PRIVATE PROFILE)

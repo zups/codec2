@@ -28,7 +28,7 @@
 
 #ifndef __CODEC2__
 #define __CODEC2__
-#include <codec2/version.h>
+//#include <codec2/version.h>
 #include <stdbool.h>
 
 #ifdef __cplusplus

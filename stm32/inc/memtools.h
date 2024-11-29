@@ -8,6 +8,6 @@
 #ifndef __MEMTOOLS__
 #define __MEMTOOLS__
 void memtools_find_unused( int (*printf_func)(const char *fmt, ...) );
-register char * memtools_sp asm ("sp");
+//register char * memtools_sp asm ("sp");
 void memtools_isnan(float *vec, int n, char *label, int (*printf_func)(const char *fmt, ...));
 #endif
