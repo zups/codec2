@@ -54,18 +54,11 @@ static inline void DEBUG_FREE(const char *func, void *ptr) {
   fprintf(stderr, "FREE: %s %p\n", func, ptr);
 }
 
-#ifdef DEBUG_ALLOC
-#define MALLOC(size) DEBUG_MALLOC(__func__, size)
-#define CALLOC(nmemb, size) DEBUG_CALLOC(__func__, nmemb, size)
-#define FREE(ptr) DEBUG_FREE(__func__, ptr)
-#else  // DEBUG_ALLOC
 // Default to normal calls
 #define MALLOC(size) codec2_malloc(size)
 
 #define CALLOC(nmemb, size) codec2_calloc(nmemb, size)
 
 #define FREE(ptr) codec2_free(ptr)
-
-#endif  // DEBUG_ALLOC
 
 #endif  // DEBUG_ALLOC_H

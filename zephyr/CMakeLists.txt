@@ -79,6 +79,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -std=gnu11 -mlittle-endian -mthumb -mt
 #set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -ffunction-sections -fdata-sections")
 
 add_definitions(-DCORTEX_M33 -D__EMBEDDED__)
+#add_definitions(-DCORTEX_M4 -D__EMBEDDED__)
 add_definitions(-DFREEDV_MODE_EN_DEFAULT=0 -DCODEC2_MODE_EN_DEFAULT=0 -DCODEC2_MODE_700C_EN=1)
 
 if(FLOAT_TYPE STREQUAL "hard")
@@ -95,7 +96,7 @@ endif()
 
 # Set default build type
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Debug")
+    #set(CMAKE_BUILD_TYPE "Debug")
 endif()
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     link_libraries(g m)
@@ -145,7 +146,7 @@ message(STATUS "CMAKE_ASM_FLAGS: " ${CMAKE_ASM_FLAGS})
 #endmacro()
 
 #include(CTest)
-include_directories(../stm32/src ../stm32/inc ../src inc ${PROJECT_BINARY_DIR})
+include_directories(../stm32/src ../stm32/zephyr_inc ../src inc ${PROJECT_BINARY_DIR})
 
 #add_subdirectory(unittest/src)
 

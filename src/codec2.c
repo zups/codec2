@@ -39,7 +39,8 @@
 #include "bpfb.h"
 #include "codec2_fft.h"
 #include "codec2_internal.h"
-#include "debug_alloc.h"
+//#include "debug_alloc.h"
+#include "memtools.h"
 #include "defines.h"
 #include "dump.h"
 #include "interp.h"
@@ -51,6 +52,7 @@
 #include "postfilter.h"
 #include "quantise.h"
 #include "sine.h"
+#include <zephyr/kernel.h>
 
 /*---------------------------------------------------------------------------* \
 
@@ -122,8 +124,10 @@ struct CODEC2 *codec2_create(int mode) {
     return NULL;
   }
 
+  printk("hello");
   c2 = (struct CODEC2 *)MALLOC(sizeof(struct CODEC2));
   if (c2 == NULL) return NULL;
+  printk("hello2");
 
   c2->mode = mode;
 
@@ -138,17 +142,20 @@ struct CODEC2 *codec2_create(int mode) {
   if (c2->Pn == NULL) {
     return NULL;
   }
+  printk("hello5");
   c2->Sn_ = (float *)MALLOC(2 * n_samp * sizeof(float));
   if (c2->Sn_ == NULL) {
     FREE(c2->Pn);
     return NULL;
   }
+  printk("hello4");
   c2->w = (float *)MALLOC(m_pitch * sizeof(float));
   if (c2->w == NULL) {
     FREE(c2->Pn);
     FREE(c2->Sn_);
     return NULL;
   }
+  printk("hello1");
   c2->Sn = (float *)MALLOC(m_pitch * sizeof(float));
   if (c2->Sn == NULL) {
     FREE(c2->Pn);
@@ -156,14 +163,22 @@ struct CODEC2 *codec2_create(int mode) {
     FREE(c2->w);
     return NULL;
   }
+  printk("hello3");
 
   for (i = 0; i < m_pitch; i++) c2->Sn[i] = 1.0;
   c2->hpf_states[0] = c2->hpf_states[1] = 0.0;
   for (i = 0; i < 2 * n_samp; i++) c2->Sn_[i] = 0;
   c2->fft_fwd_cfg = codec2_fft_alloc(FFT_ENC, 0, NULL, NULL);
   c2->fftr_fwd_cfg = codec2_fftr_alloc(FFT_ENC, 0, NULL, NULL);
+  printk("hello200\n");
+  printk("c2->const %x\n", &c2->c2const);
+  printk("c2->fft %x\n", c2->fft_fwd_cfg);
+  printk("c2->w%x\n", c2->w);
+  printk("c2->W%x\n", c2->W);
   make_analysis_window(&c2->c2const, c2->fft_fwd_cfg, c2->w, c2->W);
+  printk("hello333\n");
   make_synthesis_window(&c2->c2const, c2->Pn);
+  printk("hello444\n");
   c2->fftr_inv_cfg = codec2_fftr_alloc(FFT_DEC, 1, NULL, NULL);
   c2->prev_f0_enc = 1 / P_MAX_S;
   c2->bg_est = 0.0;
@@ -179,10 +194,12 @@ struct CODEC2 *codec2_create(int mode) {
   }
   c2->prev_e_dec = 1;
 
+  printk("hello9\n");
   c2->nlp = nlp_create(&c2->c2const);
   if (c2->nlp == NULL) {
     return NULL;
   }
+  printk("hello119\n");
 
   c2->lpc_pf = 1;
   c2->bass_boost = 1;
@@ -1441,6 +1458,7 @@ void codec2_encode_700c(struct CODEC2 *c2, unsigned char *bits,
   MODEL model;
   int indexes[4], i, M = 4;
   unsigned int nbit = 0;
+  printk("codec encode700");
 
   assert(c2 != NULL);
 
@@ -1501,6 +1519,7 @@ void codec2_decode_700c(struct CODEC2 *c2, short speech[],
   int indexes[4];
   int i;
   unsigned int nbit = 0;
+  printk("codec2 decode");
 
   assert(c2 != NULL);
 

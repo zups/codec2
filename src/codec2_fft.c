@@ -7,7 +7,8 @@
 
 #include "codec2_fft.h"
 
-#include "debug_alloc.h"
+//#include "debug_alloc.h"
+#include "memtools.h"
 
 #ifdef USE_KISS_FFT
 #include "_kiss_fft_guts.h"

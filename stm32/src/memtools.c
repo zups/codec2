@@ -11,25 +11,29 @@
 #include "memtools.h"
 #include <zephyr/kernel.h>
 
-K_HEAP_DEFINE(zephyr_heap, 2024);
+//K_HEAP_DEFINE(zephyr_heap, 50000);
 
 /* Required memory allocation wrapper for embedded platforms. For SM1000, we can just use stdlib's memory functions. */
 void* codec2_malloc(size_t size)
 {
-    return k_heap_alloc(&zephyr_heap, size, K_NO_WAIT);
+    printk("juuh size: %d", size);
+    //return k_heap_alloc(&zephyr_heap, size, K_NO_WAIT);
+    return k_malloc(size);
 }
 
 void* codec2_calloc(size_t nmemb, size_t size)
 {
     printk("juuh");
-    void *ptr = k_heap_alloc(&zephyr_heap, size, K_NO_WAIT);
-    memset(ptr, 0, size);
+    //void *ptr = k_heap_alloc(&zephyr_heap, size, K_NO_WAIT);
+    void *ptr = k_calloc(nmemb, size);
+    //memset(ptr, 0, size);
     return ptr;
 }
 
 void codec2_free(void* ptr)
 {
-    k_heap_free(&zephyr_heap, ptr);
+    //k_heap_free(&zephyr_heap, ptr);
+    k_free(ptr);
 }
 
 /* startup_stm32f4xx.s has been modified to fill RAM segment from bss up with 0x0x55555555 */

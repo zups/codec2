@@ -39,6 +39,7 @@
 
 #include "defines.h"
 #include "kiss_fft.h"
+#include <zephyr/kernel.h>
 
 #define HPF_BETA 0.125
 
@@ -102,10 +103,14 @@ C2CONST c2const_create(int Fs, float framelength_s) {
 void make_analysis_window(C2CONST *c2const, codec2_fft_cfg fft_fwd_cfg,
                           float w[], float W[]) {
   float m;
+  printk("meow");
   COMP wshift[FFT_ENC];
+  printk("meow");
   int i, j;
   int m_pitch = c2const->m_pitch;
+  printk("meow");
   int nw = c2const->nw;
+  printk("meow");
 
   /*
      Generate Hamming window centered on M-sample pitch analysis window
