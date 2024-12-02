@@ -26,6 +26,14 @@ mark_as_advanced(CLEAR
     CMAKE_INSTALL_LIBDIR
 )
 
+zephyr_get_include_directories_for_lang_as_string(       C includes)
+zephyr_get_system_include_directories_for_lang_as_string(C system_includes)
+zephyr_get_compile_definitions_for_lang_as_string(       C definitions)
+zephyr_get_compile_options_for_lang_as_string(           C options)
+set(external_project_cflags
+          "${target_flag} ${includes} ${definitions} ${options} ${system_includes}"
+                  )
+
 #
 # Prevent in-source builds
 # If an in-source build is attempted, you will still need to clean up a few
@@ -82,6 +90,23 @@ add_custom_target(dist
 # Set default C flags.
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wno-strict-overflow")
 
+set(LPCNET OFF CACHE BOOL "")
+
+# Set default C flags.
+#set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -std=gnu11 -mlittle-endian -mthumb -mthumb-interwork --specs=nano.specs -u_printf_float -mcpu=cortex-m33 -ffunction-sections -fdata-sections -O3")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -std=gnu11 -mlittle-endian -mthumb -mthumb-interwork -u_printf_float -mcpu=cortex-m33 -ffunction-sections -fdata-sections -O3")
+#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -ffunction-sections -fdata-sections")
+set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+set(MICROCONTROLLER_BUILD 1)
+add_definitions(-DCORTEX_M33 -D__EMBEDDED__)
+add_definitions(-DFREEDV_MODE_EN_DEFAULT=0 -DCODEC2_MODE_EN_DEFAULT=0 -DCODEC2_MODE_700C_EN=1)
+
+if(FLOAT_TYPE STREQUAL "hard")
+     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsingle-precision-constant -Wdouble-promotion -mfpu=fpv4-sp-d16 -mfloat-abi=hard -D__FPU_PRESENT=1 -D__FPU_USED=1")
+     #CFLAGS += -fsingle-precision-constant
+else()
+     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msoft-float")
+endif()
 # Check for what C standard is supported.
 if(NOT WIN32)
 include(CheckCCompilerFlag)

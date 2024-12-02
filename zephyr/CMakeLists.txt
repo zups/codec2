@@ -21,6 +21,7 @@ zephyr_get_compile_options_for_lang_as_string(           C options)
 set(external_project_cflags
       "${target_flag} ${includes} ${definitions} ${options} ${system_includes}"
         )
+
     #include(../stm32/cmake/gencodebooks.cmake)
 
 #
@@ -70,7 +71,8 @@ else()
 endif()
 
 set(LPCNET OFF CACHE BOOL "")
-
+set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+set(MICROCONTROLLER_BUILD 1)
 # Set default C flags.
 #set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -std=gnu11 -mlittle-endian -mthumb -mthumb-interwork --specs=nano.specs -u_printf_float -mcpu=cortex-m33 -ffunction-sections -fdata-sections -O3")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -std=gnu11 -mlittle-endian -mthumb -mthumb-interwork -u_printf_float -mcpu=cortex-m33 -ffunction-sections -fdata-sections -O3")
@@ -201,23 +203,20 @@ ${CODEC2_SRC}/ldpc_codes.c
 ${CODEC2_SRC}/phi0.c
 ${CODEC2_SRC}/HRAb_396_504.c
 ${CODEC2_SRC}/codec2_math_arm.c
-#codebook.c
-#codebookd.c
-#codebookjmv.c
-#codebookge.c
-#codebooknewamp1_energy.c
-#codebooknewamp1.c
-#src/tone.c
-#src/sfx.c
-#src/sounds.c
-#src/morse.c
-#src/menu.c
-#src/tot.c
-#src/sm1000_leds_switches.c
-#../src/codec2_fifo.c
-#src/debugblinky.c
-#src/stm32f4_vrom.c
-#src/stm32f4_usart.c
+#${CODEC2_SRC}/generate_codebook.c
+
+#${CODEC2_STM32}/codebooks/codebook.c
+#${CODEC2_STM32}/codebooks/codebookd.c
+#${CODEC2_STM32}/codebooks/codebookjmv.c
+#${CODEC2_STM32}/codebooks/codebookge.c
+#${CODEC2_STM32}/codebooks/codebooknewamp1_energy.c
+#${CODEC2_STM32}/codebooks/codebooknewamp1.c
+${CODEC2_STM32}/codebooks/codebook.c
+${CODEC2_STM32}/codebooks/codebookd.c
+${CODEC2_STM32}/codebooks/codebookjmv.c
+${CODEC2_STM32}/codebooks/codebookge.c
+${CODEC2_STM32}/codebooks/codebooknewamp1_energy.c
+${CODEC2_STM32}/codebooks/codebooknewamp1.c
 ${CODEC2_STM32}/src/memtools.c
 )
 
