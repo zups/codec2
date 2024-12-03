@@ -40,7 +40,8 @@
 #include <string.h>
 
 #include "codec2_fdmdv.h"
-#include "debug_alloc.h"
+//#include "debug_alloc.h"
+#include "memtools.h"
 #include "freedv_api.h"
 #include "octave.h"
 

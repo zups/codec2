@@ -38,7 +38,8 @@
 #include "codec2_fdmdv.h"
 #include "cohpsk_defs.h"
 #include "cohpsk_internal.h"
-#include "debug_alloc.h"
+////#include "debug_alloc.h"
+#include "memtools.h"
 #include "octave.h"
 
 #define LOG_FRAMES 100

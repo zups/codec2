@@ -40,6 +40,7 @@
 #include "mbest.h"
 #include "phase.h"
 #include "quantise.h"
+#include <zephyr/kernel.h>
 
 /*---------------------------------------------------------------------------*\
 
@@ -174,6 +175,8 @@ float rate_K_mbest_encode(int *indexes, float *x, float *xq, int ndim,
   float target[ndim];
   int index[MBEST_STAGES];
   float mse, tmp;
+  //printk("codebook1: %x", codebook1);
+  //printk("codebook2: %x", codebook2);
 
   /* codebook is compiled for a fixed K */
 
@@ -181,10 +184,13 @@ float rate_K_mbest_encode(int *indexes, float *x, float *xq, int ndim,
 
   mbest_stage1 = mbest_create(mbest_entries);
   mbest_stage2 = mbest_create(mbest_entries);
+  //struct MBEST *mbest_stage1 = mbest_create(NEWAMP1_VQ_MBEST_DEPTH);
+  //struct MBEST *mbest_stage2 = mbest_create(NEWAMP1_VQ_MBEST_DEPTH);
   for (i = 0; i < MBEST_STAGES; i++) index[i] = 0;
 
   /* Stage 1 */
 
+  //printk("newwamp.m: %d", newamp1vq_cb[0].m);
   mbest_search(codebook1, x, ndim, newamp1vq_cb[0].m, mbest_stage1, index);
 
   /* Stage 2 */
@@ -205,8 +211,8 @@ float rate_K_mbest_encode(int *indexes, float *x, float *xq, int ndim,
     xq[i] = tmp;
   }
 
-  mbest_destroy(mbest_stage1);
-  mbest_destroy(mbest_stage2);
+  //mbest_destroy(mbest_stage1);
+  //mbest_destroy(mbest_stage2);
 
   indexes[0] = n1;
   indexes[1] = n2;
@@ -487,6 +493,7 @@ void newamp1_model_to_indexes(C2CONST *c2const, int indexes[], MODEL *model,
   /* two stage VQ */
   rate_K_mbest_encode(indexes, rate_K_vec_no_mean, rate_K_vec_no_mean_, K,
                       NEWAMP1_VQ_MBEST_DEPTH);
+  return;
 
   /* running sum of squared error for variance calculation */
   for (k = 0; k < K; k++)

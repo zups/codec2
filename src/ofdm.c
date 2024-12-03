@@ -37,7 +37,8 @@
 
 #include "codec2_ofdm.h"
 #include "comp.h"
-#include "debug_alloc.h"
+//#include "debug_alloc.h"
+#include "memtools.h"
 #include "filter.h"
 #include "machdep.h"
 #include "ofdm_internal.h"

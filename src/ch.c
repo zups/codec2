@@ -35,7 +35,8 @@
 
 #include "codec2_cohpsk.h"
 #include "comp_prim.h"
-#include "debug_alloc.h"
+//#include "debug_alloc.h"
+#include "memtools.h"
 #include "freedv_api.h"
 #include "ht_coeff.h"
 #include "ssbfilt_coeff.h"

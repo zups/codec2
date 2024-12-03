@@ -31,7 +31,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "debug_alloc.h"
+//#include "debug_alloc.h"
+#include "memtools.h"
 #include "varicode_table.h"
 
 /*

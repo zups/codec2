@@ -34,8 +34,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <zephyr/kernel.h>
+
+static struct MBEST *mbest_first; 
+static struct MBEST *mbest_second; 
+static bool first = true; //to determine which mbest we return.
 
 struct MBEST *mbest_create(int entries) {
+  if (first && mbest_first != NULL) {
+    first = false;
+    return mbest_first;
+  } else if (!first && mbest_second != NULL) {
+    first = true;
+    return mbest_second;
+  }
   int i, j;
   struct MBEST *mbest;
 
@@ -51,6 +63,14 @@ struct MBEST *mbest_create(int entries) {
   for (i = 0; i < mbest->entries; i++) {
     for (j = 0; j < MBEST_STAGES; j++) mbest->list[i].index[j] = 0;
     mbest->list[i].error = 1E32;
+  }
+
+  if (first) {
+    mbest_first = mbest;
+    first = false;
+  } else {
+    mbest_second = mbest;
+    first = true;
   }
 
   return mbest;
@@ -84,14 +104,15 @@ void mbest_insert(struct MBEST *mbest, int index[], float error) {
   int i, found;
   struct MBEST_LIST *list = mbest->list;
   int entries = mbest->entries;
-
+  //return;
   found = 0;
   for (i = 0; i < entries && !found; i++)
     if (error < list[i].error) {
       found = 1;
-      memmove(&list[i + 1], &list[i],
-              sizeof(struct MBEST_LIST) * (entries - i - 1));
-      memcpy(&list[i].index[0], &index[0], sizeof(int) * MBEST_STAGES);
+      //memmove(&list[i + 1], &list[i],
+      //        sizeof(struct MBEST_LIST) * (entries - i - 1));
+      //list[i + 1] = list[i];
+      //memcpy(&list[i].index[0], &index[0], sizeof(int) * MBEST_STAGES);
       list[i].error = error;
     }
 }
@@ -99,11 +120,11 @@ void mbest_insert(struct MBEST *mbest, int index[], float error) {
 void mbest_print(char title[], struct MBEST *mbest) {
   int i, j;
 
-  fprintf(stderr, "%s\n", title);
+  printk("%s\n", title);
   for (i = 0; i < mbest->entries; i++) {
     for (j = 0; j < MBEST_STAGES; j++)
-      fprintf(stderr, "  %4d ", mbest->list[i].index[j]);
-    fprintf(stderr, " %f\n", (double)mbest->list[i].error);
+      printk("  %4d ", mbest->list[i].index[j]);
+    printk(" %f\n", (double)mbest->list[i].error);
   }
 }
 
@@ -145,7 +166,10 @@ void mbest_search(const float *cb,     /* VQ codebook to search         */
 
     where cb1[j*k+i] = w[i]*cb[j*k+i], and vec1[i] = w[i]*vec[i]
   */
-
+  //TÄHÄN ASTI OK
+  //mbest_print("kissa", mbest);
+  printk("meow\n");
+  return;
   for (j = 0; j < m; j++) {
     float e = 0.0;
     for (int i = 0; i < k; i++) {
@@ -154,9 +178,12 @@ void mbest_search(const float *cb,     /* VQ codebook to search         */
     }
 
     index[0] = j;
-    if (e < mbest->list[mbest->entries - 1].error)
+    if (e < mbest->list[mbest->entries - 1].error) {
+      return;
       mbest_insert(mbest, index, e);
+    }
   }
+  printk("done");
 }
 
 /*---------------------------------------------------------------------------*\

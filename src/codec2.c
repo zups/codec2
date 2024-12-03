@@ -1458,7 +1458,7 @@ void codec2_encode_700c(struct CODEC2 *c2, unsigned char *bits,
   MODEL model;
   int indexes[4], i, M = 4;
   unsigned int nbit = 0;
-  printk("codec encode700");
+  //printk("codec encode700");
 
   assert(c2 != NULL);
 
@@ -1476,24 +1476,8 @@ void codec2_encode_700c(struct CODEC2 *c2, unsigned char *bits,
                            c2->rate_K_sample_freqs_kHz, K, &mean,
                            rate_K_vec_no_mean, rate_K_vec_no_mean_, &c2->se,
                            c2->eq, c2->eq_en);
+  return;
   c2->nse += K;
-
-#ifndef CORTEX_M4
-  /* dump features for deep learning experiments */
-  if (c2->fmlfeat != NULL) {
-    fwrite(&mean, 1, sizeof(float), c2->fmlfeat);
-    fwrite(rate_K_vec_no_mean, K, sizeof(float), c2->fmlfeat);
-    fwrite(rate_K_vec_no_mean_, K, sizeof(float), c2->fmlfeat);
-    MODEL model_;
-    memcpy(&model_, &model, sizeof(model));
-    float rate_K_vec_[K];
-    for (int k = 0; k < K; k++) rate_K_vec_[k] = rate_K_vec_no_mean_[k] + mean;
-    resample_rate_L(&c2->c2const, &model_, rate_K_vec_,
-                    c2->rate_K_sample_freqs_kHz, K);
-    fwrite(&model_.A, MAX_AMP, sizeof(float), c2->fmlfeat);
-  }
-  if (c2->fmlmodel != NULL) fwrite(&model, sizeof(MODEL), 1, c2->fmlmodel);
-#endif
 
   pack_natural_or_gray(bits, &nbit, indexes[0], 9, 0);
   pack_natural_or_gray(bits, &nbit, indexes[1], 9, 0);

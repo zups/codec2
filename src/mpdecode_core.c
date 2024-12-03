@@ -18,7 +18,8 @@
 #include "phi0.h"
 #endif
 
-#include "debug_alloc.h"
+//#include "debug_alloc.h"
+#include "memtools.h"
 
 #ifdef __EMBEDDED__
 #include "machdep.h"
