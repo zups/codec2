@@ -104,15 +104,18 @@ void mbest_insert(struct MBEST *mbest, int index[], float error) {
   int i, found;
   struct MBEST_LIST *list = mbest->list;
   int entries = mbest->entries;
-  //return;
   found = 0;
+  //printk("error: %d\n", error);
+  //printk("entries: %d\n", entries);
+  //return;
   for (i = 0; i < entries && !found; i++)
     if (error < list[i].error) {
       found = 1;
-      //memmove(&list[i + 1], &list[i],
-      //        sizeof(struct MBEST_LIST) * (entries - i - 1));
-      //list[i + 1] = list[i];
-      //memcpy(&list[i].index[0], &index[0], sizeof(int) * MBEST_STAGES);
+      //printk("indeksi: %d", i);
+      memmove(&list[i + 1], &list[i],
+              sizeof(struct MBEST_LIST) * (entries - i - 1));
+      list[i + 1] = list[i];
+      memcpy(&list[i].index[0], &index[0], sizeof(int) * MBEST_STAGES);
       list[i].error = error;
     }
 }
@@ -168,8 +171,8 @@ void mbest_search(const float *cb,     /* VQ codebook to search         */
   */
   //TÄHÄN ASTI OK
   //mbest_print("kissa", mbest);
-  printk("meow\n");
-  return;
+  //printk("meow\n");
+  //return;
   for (j = 0; j < m; j++) {
     float e = 0.0;
     for (int i = 0; i < k; i++) {
@@ -179,11 +182,10 @@ void mbest_search(const float *cb,     /* VQ codebook to search         */
 
     index[0] = j;
     if (e < mbest->list[mbest->entries - 1].error) {
-      return;
       mbest_insert(mbest, index, e);
     }
   }
-  printk("done");
+  printk("done\n");
 }
 
 /*---------------------------------------------------------------------------*\
