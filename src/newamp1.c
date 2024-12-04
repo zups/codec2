@@ -175,8 +175,6 @@ float rate_K_mbest_encode(int *indexes, float *x, float *xq, int ndim,
   float target[ndim];
   int index[MBEST_STAGES];
   float mse, tmp;
-  //printk("codebook1: %x", codebook1);
-  //printk("codebook2: %x", codebook2);
 
   /* codebook is compiled for a fixed K */
 
@@ -190,7 +188,6 @@ float rate_K_mbest_encode(int *indexes, float *x, float *xq, int ndim,
 
   /* Stage 1 */
 
-  //printk("newwamp.m: %d", newamp1vq_cb[0].m);
   mbest_search(codebook1, x, ndim, newamp1vq_cb[0].m, mbest_stage1, index);
 
   /* Stage 2 */
@@ -493,7 +490,7 @@ void newamp1_model_to_indexes(C2CONST *c2const, int indexes[], MODEL *model,
   /* two stage VQ */
   rate_K_mbest_encode(indexes, rate_K_vec_no_mean, rate_K_vec_no_mean_, K,
                       NEWAMP1_VQ_MBEST_DEPTH);
-  return;
+  //return;
 
   /* running sum of squared error for variance calculation */
   for (k = 0; k < K; k++)

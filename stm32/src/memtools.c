@@ -16,14 +16,12 @@
 /* Required memory allocation wrapper for embedded platforms. For SM1000, we can just use stdlib's memory functions. */
 void* codec2_malloc(size_t size)
 {
-    printk("codec2_malloc: %d\n", size);
     //return k_heap_alloc(&zephyr_heap, size, K_NO_WAIT);
     return k_malloc(size);
 }
 
 void* codec2_calloc(size_t nmemb, size_t size)
 {
-    printk("codec_calloc: %d, %d\n", nmemb, size);
     //void *ptr = k_heap_alloc(&zephyr_heap, size, K_NO_WAIT);
     void *ptr = k_calloc(nmemb, size);
     //memset(ptr, 0, size);
@@ -33,7 +31,6 @@ void* codec2_calloc(size_t nmemb, size_t size)
 void codec2_free(void* ptr)
 {
     //k_heap_free(&zephyr_heap, ptr);
-    printk("free: %x\n", ptr);
     k_free(ptr);
 }
 

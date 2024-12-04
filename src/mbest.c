@@ -56,8 +56,9 @@ struct MBEST *mbest_create(int entries) {
   assert(mbest != NULL);
 
   mbest->entries = entries;
-  mbest->list =
-      (struct MBEST_LIST *)malloc(entries * sizeof(struct MBEST_LIST));
+  if (mbest->list != NULL) {
+    mbest->list = (struct MBEST_LIST *)malloc(entries * sizeof(struct MBEST_LIST));
+  }
   assert(mbest->list != NULL);
 
   for (i = 0; i < mbest->entries; i++) {
@@ -68,9 +69,11 @@ struct MBEST *mbest_create(int entries) {
   if (first) {
     mbest_first = mbest;
     first = false;
+    return mbest_first;
   } else {
     mbest_second = mbest;
     first = true;
+    return mbest_second;
   }
 
   return mbest;
@@ -101,21 +104,29 @@ void mbest_precompute_weight(float cb[], float w[], int k, int m) {
 \*---------------------------------------------------------------------------*/
 
 void mbest_insert(struct MBEST *mbest, int index[], float error) {
-  int i, found;
+  int i,j, found;
   struct MBEST_LIST *list = mbest->list;
   int entries = mbest->entries;
-  found = 0;
-  //printk("error: %d\n", error);
-  //printk("entries: %d\n", entries);
   //return;
+  found = 0;
   for (i = 0; i < entries && !found; i++)
     if (error < list[i].error) {
       found = 1;
-      //printk("indeksi: %d", i);
-      memmove(&list[i + 1], &list[i],
-              sizeof(struct MBEST_LIST) * (entries - i - 1));
-      list[i + 1] = list[i];
-      memcpy(&list[i].index[0], &index[0], sizeof(int) * MBEST_STAGES);
+    //  memmove(&list[i + 1], &list[i],
+   //           sizeof(struct MBEST_LIST) * (entries - i - 1));
+    //  list[i + 1] = list[i];
+     // memcpy(&list[i].index[0], &index[0], sizeof(int) * MBEST_STAGES);
+    //  list[i].error = error;
+    
+      // Replace memmove: Shift elements from i to entries - 1
+      for (j = entries - 1; j > i; j--) {
+        list[j] = list[j - 1];
+      }
+
+      // Replace memcpy: Copy index values
+      for (j = 0; j < MBEST_STAGES; j++) {
+        list[i].index[j] = index[j];
+      }
       list[i].error = error;
     }
 }
@@ -171,8 +182,6 @@ void mbest_search(const float *cb,     /* VQ codebook to search         */
   */
   //TÄHÄN ASTI OK
   //mbest_print("kissa", mbest);
-  //printk("meow\n");
-  //return;
   for (j = 0; j < m; j++) {
     float e = 0.0;
     for (int i = 0; i < k; i++) {
@@ -185,7 +194,6 @@ void mbest_search(const float *cb,     /* VQ codebook to search         */
       mbest_insert(mbest, index, e);
     }
   }
-  printk("done\n");
 }
 
 /*---------------------------------------------------------------------------*\
