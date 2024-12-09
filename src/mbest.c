@@ -56,9 +56,7 @@ struct MBEST *mbest_create(int entries) {
   assert(mbest != NULL);
 
   mbest->entries = entries;
-  if (mbest->list != NULL) {
-    mbest->list = (struct MBEST_LIST *)malloc(entries * sizeof(struct MBEST_LIST));
-  }
+  mbest->list = (struct MBEST_LIST *)malloc(entries * sizeof(struct MBEST_LIST));
   assert(mbest->list != NULL);
 
   for (i = 0; i < mbest->entries; i++) {
@@ -188,6 +186,7 @@ void mbest_search(const float *cb,     /* VQ codebook to search         */
       float diff = *cb++ - vec[i];
       e += diff * diff;
     }
+    //k_yield();
 
     index[0] = j;
     if (e < mbest->list[mbest->entries - 1].error) {

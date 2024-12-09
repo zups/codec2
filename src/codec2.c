@@ -1451,6 +1451,7 @@ void codec2_encode_700c(struct CODEC2 *c2, unsigned char *bits,
   for (i = 0; i < M; i++) {
     analyse_one_frame(c2, &model, &speech[i * c2->n_samp]);
   }
+  //k_yield();
 
   int K = 20;
   float rate_K_vec[K], mean;
@@ -1462,9 +1463,14 @@ void codec2_encode_700c(struct CODEC2 *c2, unsigned char *bits,
                            c2->eq, c2->eq_en);
   c2->nse += K;
 
+  //return;
+  //k_yield();
   pack_natural_or_gray(bits, &nbit, indexes[0], 9, 0);
+  //k_yield();
   pack_natural_or_gray(bits, &nbit, indexes[1], 9, 0);
+  //k_yield();
   pack_natural_or_gray(bits, &nbit, indexes[2], 4, 0);
+  //k_yield();
   pack_natural_or_gray(bits, &nbit, indexes[3], 6, 0);
 
   assert(nbit == (unsigned)codec2_bits_per_frame(c2));
@@ -1508,19 +1514,19 @@ void codec2_decode_700c(struct CODEC2 *c2, short speech[],
       c2->post_filter_en);
 
   for (i = 0; i < M; i++) {
-    if (c2->fmlfeat != NULL) {
-      /* We use standard nb_features=55 feature records for compatibility with
-       * train_lpcnet.py */
-      float features[55] = {0};
-      /* just using 18/20 for compatibility with LPCNet, coarse scaling for NN
-       * input */
-      for (int j = 0; j < 18; j++)
-        features[j] = (interpolated_surface_[i][j] - 30) / 40;
-      int pitch_index = 21 + 2.0 * M_PI / model[i].Wo;
-      features[36] = 0.02 * (pitch_index - 100);
-      features[37] = model[i].voiced;
-      fwrite(features, 55, sizeof(float), c2->fmlfeat);
-    }
+    //if (c2->fmlfeat != NULL) {
+    //  /* We use standard nb_features=55 feature records for compatibility with
+    //   * train_lpcnet.py */
+    //  float features[55] = {0};
+    //  /* just using 18/20 for compatibility with LPCNet, coarse scaling for NN
+    //   * input */
+    //  for (int j = 0; j < 18; j++)
+    //    features[j] = (interpolated_surface_[i][j] - 30) / 40;
+    //  int pitch_index = 21 + 2.0 * M_PI / model[i].Wo;
+    //  features[36] = 0.02 * (pitch_index - 100);
+    //  features[37] = model[i].voiced;
+    //  fwrite(features, 55, sizeof(float), c2->fmlfeat);
+    //}
 
     /* 700C is a little quieter so lets apply some experimentally derived audio
      * gain */

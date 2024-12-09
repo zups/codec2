@@ -188,19 +188,27 @@ float rate_K_mbest_encode(int *indexes, float *x, float *xq, int ndim,
 
   /* Stage 1 */
 
+  //k_yield();
   mbest_search(codebook1, x, ndim, newamp1vq_cb[0].m, mbest_stage1, index);
+  //k_yield();
 
   /* Stage 2 */
 
   for (j = 0; j < mbest_entries; j++) {
     index[1] = n1 = mbest_stage1->list[j].index[0];
     for (i = 0; i < ndim; i++) target[i] = x[i] - codebook1[ndim * n1 + i];
+    //k_yield();
     mbest_search(codebook2, target, ndim, newamp1vq_cb[1].m, mbest_stage2,
                  index);
   }
 
+  return 0;
+
   n1 = mbest_stage2->list[0].index[1];
   n2 = mbest_stage2->list[0].index[0];
+
+
+  //Useless since we are not even using the return value.
   mse = 0.0;
   for (i = 0; i < ndim; i++) {
     tmp = codebook1[ndim * n1 + i] + codebook2[ndim * n2 + i];
