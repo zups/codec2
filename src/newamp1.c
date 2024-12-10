@@ -202,8 +202,6 @@ float rate_K_mbest_encode(int *indexes, float *x, float *xq, int ndim,
                  index);
   }
 
-  return 0;
-
   n1 = mbest_stage2->list[0].index[1];
   n2 = mbest_stage2->list[0].index[0];
 
